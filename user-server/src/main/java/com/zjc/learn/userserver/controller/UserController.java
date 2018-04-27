@@ -1,5 +1,6 @@
 package com.zjc.learn.userserver.controller;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,8 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/user")
 public class UserController {
+
+    @Value("${learn.test}")
+    private String learnTest;
     @GetMapping("/test")
     public Object test(String name) {
-        return  name;
+        return  learnTest;
     }
 }
