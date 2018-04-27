@@ -23,6 +23,7 @@ public class LoginController {
     @GetMapping()
     public String checkLogin(String name) {
         Object test = userClient.test(name);
-        return test.equals(test) ? ":success" : "failed";
+//        throw new RuntimeException("服务异常!异常服务:" + this.getClass());
+        return test.equals(name) ? ":success" : "failed";
     }
 }

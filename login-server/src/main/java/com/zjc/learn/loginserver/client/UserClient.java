@@ -13,9 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @author Sandu
  * @datetime 2018/4/26 9:59
  */
-@FeignClient(name = "user-service")
-@RequestMapping("/user")
+@FeignClient(name = "user-service",fallback = UserClientHystrix.class)
 public interface UserClient {
-    @GetMapping("/test")
+    @GetMapping("/user/test")
     Object test(@RequestParam("name") String name);
 }
