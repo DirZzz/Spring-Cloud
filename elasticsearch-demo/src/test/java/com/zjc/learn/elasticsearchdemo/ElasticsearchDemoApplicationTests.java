@@ -7,19 +7,13 @@ import com.zjc.learn.elasticsearchdemo.model.packageModel.Book;
 import com.zjc.learn.elasticsearchdemo.model.packageModel.SysUser;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.index.query.QueryStringQueryBuilder;
-import org.hibernate.cfg.annotations.QueryBinder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
-import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.xml.bind.SchemaOutputResolver;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -48,20 +42,21 @@ public class ElasticsearchDemoApplicationTests {
         System.out.println(sysUser);
 
 //        elaDao.save(sysUser);
-        bookRepository.save(Book.builder().id(12 + "").author("张三").name("Think in Python").content("test").build());
+        bookRepository.save(Book.builder().author("数码宝宝").name("Think in Python").content("中国驻洛杉矶领事馆遭亚裔男子枪击 嫌犯已自首").build());
     }
 
     @Test
     public void find() {
         bookRepository.deleteById("12");
 //        Book book = bookRepository.findFirstByAuthor("张三");
-        List<Book> books = bookRepository.findAllByAuthor("张三");
+        List<Book> books = bookRepository.findAllByAuthor("数码宝宝");
+        books = bookRepository.findByContentContaining("洛杉矶");
+        books = bookRepository.findByContentLike("中国");
         List<Book> allByAuthorAndContentLike = bookRepository.findAllByAuthorAndContentLike("张三", "es");
         List<Book> es = bookRepository.findByNameLike("ja");
         Stream<Book> byNameLikeAndContent = bookRepository.findByNameLikeAndContent("ja", "test");
         List<Book> collect = byNameLikeAndContent.collect(Collectors.toList());
         log.info("es us []", es);
-
         System.out.println(allByAuthorAndContentLike);
         System.out.println(books);
     }
@@ -79,7 +74,9 @@ public class ElasticsearchDemoApplicationTests {
         rets = bookRepository.search(QueryBuilders.spanTermQuery("author", "张三"));
         rets = bookRepository.search(QueryBuilders.fuzzyQuery("name", "Java"));
         rets = bookRepository.search(QueryBuilders.fuzzyQuery("name", "in"));
-        rets = bookRepository.search(must);
+        rets = bookRepository.search(QueryBuilders.matchQuery("author","张三是宝宝"));
+        rets = bookRepository.search(QueryBuilders.matchQuery("content","洛杉矶"));
+        System.out.println(QueryBuilders.matchQuery("author","数").toString());
         rets.forEach(System.out::println);
 
     }
